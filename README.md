@@ -19,7 +19,7 @@ Un framework RAG (Retrieval-Augmented Generation) agnóstico, modular y ultra-li
 ## 🚀 Inicio Rápido (Uso Real)
 
 Configura tu motor RAG conectándolo a tus instancias locales o en la nube:
-```
+```javascript
 import express from 'express';
 import { RAG } from 'rag-router';
 import { ChromaAdapter, TypeSenseAdapter } from 'rag-router/adapters/db';
@@ -35,7 +35,7 @@ const openAIProvider = new OpenAIAdapter({
   embeddingModel: 'text-embedding-ada-002'
 });
 
-// 2. Instanciar el motor RAG con adaptadores reales
+// 2. Instanciar el motor RAG
 const ragEngine = new RAG({
   vectorialDB: new ChromaAdapter("http://localhost:8000", "mi_coleccion_vectores"),
   semanticDB: new TypeSenseAdapter({
@@ -61,61 +61,16 @@ app.listen(3000, () => console.log("🔥 RAG Router activo en el puerto 3000"));
 
 Por defecto (o personalizados mediante coustomRouter), ragEngine.router expone las siguientes rutas:
 
-Método
 
-Endpoint por Defecto
 
-Descripción
-
-Body Requerido
-
-POST
-
-/query
-
-Pipeline RAG Completo: Busca contexto híbrido, inyecta en el prompt y genera respuesta con el LLM.
-
-{"question": "string", "promptTemplate"?: "string"}
-
-GET
-
-/reload-docs
-
-Escanea el directorio docDir, extrae textos, genera embeddings en lotes y sincroniza las DBs.
-
-Ninguno
-
-POST
-
-/hybrid-search
-
-Devuelve los mejores N documentos cruzando ambas bases de datos mediante RRF.
-
-{"question": "string", "limit"?: number}
-
-POST
-
-/vectorial-search
-
-Realiza una búsqueda por similitud de cosenos usando embeddings en tu DB vectorial.
-
-{"question": "string", "limit"?: number}
-
-POST
-
-/semantic-search
-
-Realiza una búsqueda léxica/semántica basada en palabras clave de texto crudo.
-
-{"question": "string", "limit"?: number}
-
-GET
-
-/health
-
-Endpoint interno para monitoreo de estado del motor RAG.
-
-Ninguno
+| Método | Endpoint por Defecto | Descripción | Body Requerido |
+|--------|----------------------|-------------|----------------|
+| POST | /query | Pipeline RAG Completo: Busca contexto híbrido, inyecta en el prompt y genera respuesta con el LLM. | {"question": "string", "promptTemplate"?: "string"} |
+|GET|/reload-docs|Escanea el directorio docDir, extrae textos, genera embeddings en lotes y sincroniza las DBs.|Ninguno|
+|POST|/hybrid-search|Devuelve los mejores N documentos cruzando ambas bases de datos mediante RRF.|{"question": "string", "limit"?: number}|
+|POST|/vectorial-search|Realiza una búsqueda por similitud de cosenos usando embeddings en tu DB vectorial.|{"question": "string", "limit"?: number}|
+|POST|/semantic-search|Realiza una búsqueda léxica/semántica basada en palabras clave de texto crudo.|{"question": "string", "limit"?: number}|
+|GET|/health|Endpoint interno para monitoreo de estado del motor RAG.|Ninguno|
 
 ## 📐 Estructura del Proyecto
 El código fuente está organizado bajo una limpia separación de responsabilidades:
