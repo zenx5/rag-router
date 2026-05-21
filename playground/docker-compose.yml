@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+  typesense:
+    image: typesense/typesense:0.25.2 # Puedes cambiar a 'latest', pero es mejor fijar una versión
+    container_name: typesense
+    ports:
+      - "8108:8108"
+    volumes:
+      - ./typesense_data:/data
+    command: '--data-dir /data --api-key=tu_clave_secreta_aqui --enable-cors=true'
+    restart: unless-stopped

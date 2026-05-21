@@ -1,2 +1,2 @@
-export { LLMModel } from './llm.ts';
-export { EmbeddingModel } from './embedder.ts';
+export type { LLMModel } from './llm.ts';
+export type { EmbeddingModel } from './embedder.ts';

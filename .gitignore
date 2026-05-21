@@ -1,1 +1,3 @@
 node_modules
+playground/*_data
+playground/**/*.json

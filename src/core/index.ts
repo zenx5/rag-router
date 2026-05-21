@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { VectorialDB, SemanticDB } from '../adapters/db/index.ts';
-import { LLMModel, EmbeddingModel } from '../adapters/models/index.ts';
+import type { VectorialDB, SemanticDB } from '../adapters/db/index.ts';
+import type { LLMModel, EmbeddingModel } from '../adapters/models/index.ts';
 import { buildRagPrompt, buildPromptOfTemplate } from '../utils/prompt.ts';
 import { computeRRF } from '../utils/rrf.ts';
+import { processJsonDirectory } from '../ingestion/indes.ts';
 
 interface RAGConfig {
   vectorialDB: VectorialDB;
@@ -88,8 +89,25 @@ export class RAG {
   }
 
   private async handleReloadDocs(req: any, res: any) {
-    // Lógica de recarga de documentos de RAG
-    res.json({ message: "Reload Docs" });
+    try {
+      // Usamos el directorio configurado por el usuario
+      const docDir = this.config.docDir;
+
+      const processedCount = await processJsonDirectory(
+        docDir,
+        this.config.vectorialDB,
+        this.config.semanticDB,
+        this.config.embeddingModel
+      );
+
+      return res.json({
+        message: "Base de conocimientos recargada con éxito",
+        documentsProcessed: processedCount
+      });
+
+    } catch (error) {
+      return res.status(500).json({ error: "Error recargando los documentos" });
+    }
   }
 
   private async handleSemanticSearch(req: any, res: any) {

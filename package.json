@@ -4,16 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --watch playground/server.ts",
+    "test2": "node --watch playground/server2.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "express": "^5.2.1"
+    "chromadb": "3.4.3",
+    "express": "5.2.1",
+    "openai": "6.38.0",
+    "typesense": "3.0.6"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6"
+    "@types/express": "5.0.6"
   }
 }

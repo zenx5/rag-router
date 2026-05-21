@@ -1,2 +1,2 @@
-export { VectorialDB } from './vector.js';
-export { SemanticDB } from './semantic.js';
+export type { VectorialDB } from './vector.ts';
+export type { SemanticDB } from './semantic.ts';
