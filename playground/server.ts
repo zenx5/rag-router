@@ -40,7 +40,7 @@ const ragEngine = new RAG({
   embeddingModel: mockEmbeddingModel,
   docDir: './playground/docs', // Apuntamos a la carpeta de pruebas
   router: express.Router,
-  coustomRouter: {
+  customRouter: {
     '/reload-docs': '/reload' // Mapeamos para probar que funciona tu lógica custom
   }
 });

@@ -59,7 +59,7 @@ const ragEngine = new RAG({
   embeddingModel: openAIProvider,
   docDir: './playground/docs', // Lee los mismos JSONs de prueba que creamos antes
   router: express.Router,
-  coustomRouter: {
+  customRouter: {
     '/reload-docs': '/reload'
   }
 });

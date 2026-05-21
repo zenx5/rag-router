@@ -22,8 +22,9 @@ Configura tu motor RAG conectándolo a tus instancias locales o en la nube:
 ```javascript
 import express from 'express';
 import { RAG } from 'rag-router';
-import { ChromaAdapter, TypeSenseAdapter } from 'rag-router/adapters/db';
-import { OpenAIAdapter } from 'rag-router/adapters/models';
+import { ChromaAdapter } from 'rag-router/adapters/db/chroma';
+import { TypeSenseAdapter } from 'rag-router/adapters/db/typesense';
+import { OpenAIAdapter } from 'rag-router/adapters/models/openai';
 
 const app = express();
 app.use(express.json()); // Requerido para procesar los cuerpos de las peticiones
@@ -46,7 +47,7 @@ const ragEngine = new RAG({
   embeddingModel: openAIProvider,
   docDir: './docs', // Directorio que contiene tus archivos JSON
   router: express.Router,
-  coustomRouter: {
+  customRouter: {
     '/reload-docs': '/reload' // Personaliza tus endpoints
   }
 });
@@ -59,7 +60,7 @@ app.listen(3000, () => console.log("🔥 RAG Router activo en el puerto 3000"));
 
 ## 🛣️ Endpoints Disponibles
 
-Por defecto (o personalizados mediante coustomRouter), ragEngine.router expone las siguientes rutas:
+Por defecto (o personalizados mediante customRouter), ragEngine.router expone las siguientes rutas:
 
 
 

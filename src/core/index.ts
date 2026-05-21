@@ -12,14 +12,14 @@ interface RAGConfig {
   embeddingModel: EmbeddingModel;
   docDir: string;
   router: typeof Router;
-  coustomRouter?: Record<string, string>;
+  customRouter?: Record<string, string>;
   plugins?: any[];
 }
 
 export class RAG {
   public router: Router;
   private config: RAGConfig;
-  private coustomRouter: Record<string, string>;
+  private customRouter: Record<string, string>;
   private routes = {
     query: { path: '/query', method: 'POST', isCustomizable: true, currentPath: '/query', getPath: () => this.routes.query.currentPath },
     health: { path: '/health', method: 'GET', isCustomizable: false, currentPath: '/health', getPath: () => this.routes.health.currentPath },
@@ -32,26 +32,26 @@ export class RAG {
   constructor(config: RAGConfig) {
     this.config = config;
     this.router = config.router(); // Instanciamos el router de Express
-    this.coustomRouter = Object.assign({
+    this.customRouter = Object.assign({
       '/reload-docs': '/reload-docs',
       '/query': '/query',
       '/health': '/health',
       '/semantic-search': '/semantic-search',
       '/vectorial-search': '/vectorial-search',
       '/hybrid-search': '/hybrid-search'
-    }, config.coustomRouter || {});
+    }, config.customRouter || {});
 
     this.setupRoutes();
   }
 
   private setupRoutes() {
     const endpoints = [
-        { path: this.coustomRouter['/query'], method: 'POST', isCustomizable: true, handle:this.handleQuery },
-        { path: this.coustomRouter['/reload-docs'], method: 'GET', isCustomizable: true, handle:this.handleReloadDocs },
+        { path: this.customRouter['/query'], method: 'POST', isCustomizable: true, handle:this.handleQuery },
+        { path: this.customRouter['/reload-docs'], method: 'GET', isCustomizable: true, handle:this.handleReloadDocs },
         { path: '/health', method: 'GET', isCustomizable: false, handle:this.handleHealth },
-        { path: this.coustomRouter['/semantic-search'], method: 'POST', isCustomizable: true, handle:this.handleSemanticSearch },
-        { path: this.coustomRouter['/vectorial-search'], method: 'POST', isCustomizable: true, handle:this.handleVectorialSearch },
-        { path: this.coustomRouter['/hybrid-search'], method: 'POST', isCustomizable: true, handle:this.handleHybridSearch },
+        { path: this.customRouter['/semantic-search'], method: 'POST', isCustomizable: true, handle:this.handleSemanticSearch },
+        { path: this.customRouter['/vectorial-search'], method: 'POST', isCustomizable: true, handle:this.handleVectorialSearch },
+        { path: this.customRouter['/hybrid-search'], method: 'POST', isCustomizable: true, handle:this.handleHybridSearch },
     ]
     for(const endpoint of endpoints) {
       this.callHttp(endpoint.method)(endpoint.path, endpoint.handle.bind(this) || (() => {}));

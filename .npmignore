@@ -1,0 +1,9 @@
+node_modules
+src
+playground
+.vscode
+*.ts
+*.map
+tsconfig.json
+dist
+AGENT.md
