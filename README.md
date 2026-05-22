@@ -15,6 +15,116 @@ Un framework RAG (Retrieval-Augmented Generation) agnóstico, modular y ultra-li
 ## Si usas los adaptadores oficiales, instala sus dependencias correspondientes:
 ```npm install openai chromadb typesense```
 
+## 🧩 Cómo crear tus conectores
+rag-router expone contratos simples para que puedas conectar tu propia base de datos y proveedor de IA.
+
+### Conectores de base de datos
+RAG espera dos adaptadores distintos:
+
+- `VectorialDB` para búsquedas por similitud con embeddings.
+- `SemanticDB` para búsquedas semánticas de texto.
+
+#### `VectorialDB`
+Este adaptador se usa al indexar documentos y al consultar con un vector de embedding.
+
+Debe implementar:
+
+```ts
+export interface VectorialDB {
+  insert(vectors: number[][], metadatas: any[]): Promise<void>;
+  search(vector: number[], limit: number): Promise<any[]>;
+}
+```
+
+- `insert(vectors, metadatas)`: recibe un array de embeddings y un array paralelo de metadatos/documentos normalizados.
+- `search(vector, limit)`: recibe el embedding de la consulta y debe devolver los documentos más similares.
+
+#### `SemanticDB`
+Este adaptador se usa para búsquedas de texto directo sobre tu índice.
+
+Debe implementar:
+
+```ts
+export interface SemanticDB {
+  insert(documents: any[]): Promise<void>;
+  search(query: string, limit: number): Promise<any[]>;
+}
+```
+
+- `insert(documents)`: recibe los documentos normalizados que se van a indexar en la base semántica.
+- `search(query, limit)`: recibe la pregunta/palabra clave y devuelve los resultados relevantes.
+
+### Conectores de IA
+RAG requiere dos adaptadores para IA:
+
+- `LLMModel` para generar texto.
+- `EmbeddingModel` para crear embeddings.
+
+#### `LLMModel`
+Debes implementar:
+
+```ts
+export interface LLMModel {
+  generate(prompt: string): Promise<string>;
+}
+```
+
+RAG llama a `generate(prompt)` cuando debe completar el prompt construido con el contexto recuperado.
+
+#### `EmbeddingModel`
+Debes implementar:
+
+```ts
+export interface EmbeddingModel {
+  createEmbedding(text: string): Promise<number[]>;
+}
+```
+
+RAG usa este adaptador para:
+
+- crear embeddings de los documentos durante la ingesta,
+- crear embeddings de la pregunta del usuario antes de buscar en la base vectorial.
+
+### Ejemplo mínimo de adaptador
+```ts
+class MiVectorDB implements VectorialDB {
+  async insert(vectors: number[][], metadatas: any[]) {
+    // Guardar vectores y metadatos en tu DB vectorial.
+  }
+
+  async search(vector: number[], limit: number) {
+    // Buscar en tu índice y devolver los mejores documentos.
+    return [];
+  }
+}
+
+class MiSemanticDB implements SemanticDB {
+  async insert(documents: any[]) {
+    // Indexar documentos en tu motor semántico.
+  }
+
+  async search(query: string, limit: number) {
+    // Buscar texto y devolver resultados.
+    return [];
+  }
+}
+
+class MiEmbeddingModel implements EmbeddingModel {
+  async createEmbedding(text: string) {
+    // Crear y devolver un vector de embedding.
+    return [];
+  }
+}
+
+class MiLLM implements LLMModel {
+  async generate(prompt: string) {
+    // Generar texto con tu LLM.
+    return 'respuesta generada';
+  }
+}
+```
+
+> Nota: durante la ingesta, rag-router normaliza cada documento y le añade `id` y `_rawText`. Luego llama a `vectorialDB.insert(vectors, metadatas)` y a `semanticDB.insert(documents)`.
 
 ## 🚀 Inicio Rápido (Uso Real)
 
