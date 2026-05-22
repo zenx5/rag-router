@@ -1,6 +1,6 @@
 {
   "name": "rag-router",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
@@ -15,7 +15,7 @@
     "test2": "node --watch playground/server2.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Octavio Martinez (https://github.com/zenx5)",
   "license": "ISC",
   "type": "module",
   "exports": {
