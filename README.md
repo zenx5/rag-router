@@ -1,33 +1,33 @@
 # rag-router 🚀
 
-Un framework RAG (Retrieval-Augmented Generation) agnóstico, modular y ultra-ligero diseñado específicamente para el ecosistema de Node.js y Express. Permite convertir cualquier directorio de documentos en una API RAG completa con búsqueda híbrida, ordenamiento matemático y endpoints customizables en cuestión de minutos.
+A platform-agnostic, modular, and ultra-lightweight RAG (Retrieval-Augmented Generation) framework designed specifically for the Node.js and Express ecosystem. It allows you to transform any document directory into a complete RAG API with hybrid search, mathematical sorting, and customizable endpoints in minutes..
 
-## ✨ Características
- * 🎯 DX (Developer Experience) Impecable: Declarativo, limpio y completamente integrado como un Middleware/Router de Express.
- * 🔀 Búsqueda Híbrida Avanzada: Combina lo mejor de la búsqueda vectorial y semántica clásica utilizando el algoritmo RRF (Reciprocal Rank Fusion).
- * 🧱 Arquitectura Agnóstica (Basada en Adaptadores): El núcleo de la librería es 100% independiente. Puedes usar cualquier base de datos o modelo de IA implementando una interfaz simple.
- * 📦 Baterías Incluidas: Adaptadores oficiales integrados listos para usar con OpenAI, ChromaDB y TypeSense.
- * 🛠️ Rutas Customizables: Mapea y renombra los endpoints según los estándares de tu API corporativa.
- * 🔌 Sistema Extensible: Diseñado para soportar plugins externos (como dashboards de administración).
+## ✨ Features
+ * 🎯 DX (Developer Experience) Flawless: Declarative, clean, and fully integrated as an Express Middleware/Router.
+ * 🔀 Advanced Hybrid Search: Combines the best of vector and classic semantic search using the RRF (Reciprocal Rank Fusion) algorithm.
+ * 🧱 Agnostic Architecture (Adapter-Based): The core of the library is 100% independent. You can use any database or AI model by implementing a simple interface.
+ * 📦 Batteries Included: Integrated official adapters ready to use with OpenAI, ChromaDB and TypeSense.
+ * 🛠️ Customizable Routes: Map and rename endpoints according to your corporate API standards.
+ * 🔌 Extensible System: Designed to support external plugins (such as administration dashboards).
 
-## 📦 Instalación
-```npm install express rag-router```
-## Si usas los adaptadores oficiales, instala sus dependencias correspondientes:
+## 📦 Install
+```npm install express rag-router```<br/>
+**If you are using the official adapters, install their corresponding dependencies:** <br/>
 ```npm install openai chromadb typesense```
 
-## 🧩 Cómo crear tus conectores
-rag-router expone contratos simples para que puedas conectar tu propia base de datos y proveedor de IA.
+## 🧩 How to create your connectors
+rag-router exposes simple contracts so you can connect your own database and AI provider.
 
-### Conectores de base de datos
-RAG espera dos adaptadores distintos:
+### Database connectors
+RAG expects two different adapters:
 
-- `VectorialDB` para búsquedas por similitud con embeddings.
-- `SemanticDB` para búsquedas semánticas de texto.
+- `VectorialDB` for searches based on similarity with embeddings.
+- `SemanticDB` for semantic text searches.
 
 #### `VectorialDB`
-Este adaptador se usa al indexar documentos y al consultar con un vector de embedding.
+This adapter is used when indexing documents and querying with an embedding vector.
 
-Debe implementar:
+You must implement:
 
 ```ts
 export interface VectorialDB {
@@ -36,13 +36,13 @@ export interface VectorialDB {
 }
 ```
 
-- `insert(vectors, metadatas)`: recibe un array de embeddings y un array paralelo de metadatos/documentos normalizados.
-- `search(vector, limit)`: recibe el embedding de la consulta y debe devolver los documentos más similares.
+- `insert(vectors, metadatas)`: It receives an array of embeddings and a parallel array of normalized metadata/documents.
+- `search(vector, limit)`: It receives the query embed and must return the most similar documents.
 
 #### `SemanticDB`
-Este adaptador se usa para búsquedas de texto directo sobre tu índice.
+This adapter is used for direct text searches on your index..
 
-Debe implementar:
+You must implement:
 
 ```ts
 export interface SemanticDB {
@@ -51,17 +51,17 @@ export interface SemanticDB {
 }
 ```
 
-- `insert(documents)`: recibe los documentos normalizados que se van a indexar en la base semántica.
-- `search(query, limit)`: recibe la pregunta/palabra clave y devuelve los resultados relevantes.
+- `insert(documents)`: receives the standardized documents that will be indexed in the semantic database.
+- `search(query, limit)`: It receives the question/keyword and returns the relevant results..
 
-### Conectores de IA
-RAG requiere dos adaptadores para IA:
+### AI Connectors
+RAG requires two adapters for AI:
 
-- `LLMModel` para generar texto.
-- `EmbeddingModel` para crear embeddings.
+- `LLMModel` to generate text.
+- `EmbeddingModel` to create embeddings.
 
 #### `LLMModel`
-Debes implementar:
+You must implement:
 
 ```ts
 export interface LLMModel {
@@ -69,10 +69,10 @@ export interface LLMModel {
 }
 ```
 
-RAG llama a `generate(prompt)` cuando debe completar el prompt construido con el contexto recuperado.
+RAG calls `generate(prompt)` when it needs to complete the prompt constructed with the retrieved context.
 
 #### `EmbeddingModel`
-Debes implementar:
+You must implement:
 
 ```ts
 export interface EmbeddingModel {
@@ -80,55 +80,55 @@ export interface EmbeddingModel {
 }
 ```
 
-RAG usa este adaptador para:
+RAG uses this adapter to:
 
-- crear embeddings de los documentos durante la ingesta,
-- crear embeddings de la pregunta del usuario antes de buscar en la base vectorial.
+- create document embeddings during ingestion,
+- create user query embeddings before searching the vector database.
 
-### Ejemplo mínimo de adaptador
+### Minimal example of an adapter
 ```ts
 class MiVectorDB implements VectorialDB {
   async insert(vectors: number[][], metadatas: any[]) {
-    // Guardar vectores y metadatos en tu DB vectorial.
+    // Save vectors and metadata in your vector database.
   }
 
   async search(vector: number[], limit: number) {
-    // Buscar en tu índice y devolver los mejores documentos.
+    // Search your index and return the best documents.
     return [];
   }
 }
 
 class MiSemanticDB implements SemanticDB {
   async insert(documents: any[]) {
-    // Indexar documentos en tu motor semántico.
+    // Indexing documents in your semantic engine.
   }
 
   async search(query: string, limit: number) {
-    // Buscar texto y devolver resultados.
+    // Search for text and return results.
     return [];
   }
 }
 
 class MiEmbeddingModel implements EmbeddingModel {
   async createEmbedding(text: string) {
-    // Crear y devolver un vector de embedding.
+    // Create and return an embedding vector.
     return [];
   }
 }
 
 class MiLLM implements LLMModel {
   async generate(prompt: string) {
-    // Generar texto con tu LLM.
+    // Generate text with your LLM.
     return 'respuesta generada';
   }
 }
 ```
 
-> Nota: durante la ingesta, rag-router normaliza cada documento y le añade `id` y `_rawText`. Luego llama a `vectorialDB.insert(vectors, metadatas)` y a `semanticDB.insert(documents)`.
+> Note: During ingestion, rag-router normalizes each document and appends `id` and `_rawText`. It then calls `vectorialDB.insert(vectors, metadata)` and `semanticDB.insert(documents)`.
 
-## 🚀 Inicio Rápido (Uso Real)
+## 🚀 Quick Start (Real-World Use)
 
-Configura tu motor RAG conectándolo a tus instancias locales o en la nube:
+Set up your RAG engine by connecting it to your local or cloud instances:
 ```javascript
 import express from 'express';
 import { RAG } from 'rag-router';
@@ -137,16 +137,16 @@ import { TypeSenseAdapter } from 'rag-router/adapters/db/typesense';
 import { OpenAIAdapter } from 'rag-router/adapters/models/openai';
 
 const app = express();
-app.use(express.json()); // Requerido para procesar los cuerpos de las peticiones
+app.use(express.json()); // Required to process the bodies of the requests
 
-// 1. Inicializar Proveedor de IA (Maneja LLM y Embeddings)
+// 1. Initialize AI Provider (Handles LLM and Embeddings)
 const openAIProvider = new OpenAIAdapter({
   apiKey: process.env.OPENAI_API_KEY!,
   llmModel: 'gpt-3.5-turbo',
   embeddingModel: 'text-embedding-ada-002'
 });
 
-// 2. Instanciar el motor RAG
+// 2. Instantiate the RAG engine
 const ragEngine = new RAG({
   vectorialDB: new ChromaAdapter("http://localhost:8000", "mi_coleccion_vectores"),
   semanticDB: new TypeSenseAdapter({
@@ -155,43 +155,43 @@ const ragEngine = new RAG({
   }, "mi_coleccion_semantica"),
   model: openAIProvider,
   embeddingModel: openAIProvider,
-  docDir: './docs', // Directorio que contiene tus archivos JSON
+  docDir: './docs', // Directory that contains your JSON files
   router: express.Router,
   customRouter: {
-    '/reload-docs': '/reload' // Personaliza tus endpoints
+    '/reload-docs': '/reload' // Customize your endpoints
   }
 });
 
-// 3. Montar el router en tu aplicación Express
+// 3. Set up the router in your Express app
 app.use('/api/v1/rag', ragEngine.router);
 
-app.listen(3000, () => console.log("🔥 RAG Router activo en el puerto 3000"));
+app.listen(3000, () => console.log("🔥 RAG Router active on port 3000"));
 ```
 
-## 🛣️ Endpoints Disponibles
+## 🛣️ Available Endpoints
 
-Por defecto (o personalizados mediante customRouter), ragEngine.router expone las siguientes rutas:
+By default (or customized using customRouter), ragEngine.router exposes the following routes:
 
 
 
-| Método | Endpoint por Defecto | Descripción | Body Requerido |
+| Method | Default Endpoint | Description | Body required |
 |--------|----------------------|-------------|----------------|
-| POST | /query | Pipeline RAG Completo: Busca contexto híbrido, inyecta en el prompt y genera respuesta con el LLM. | {"question": "string", "promptTemplate"?: "string"} |
-|GET|/reload-docs|Escanea el directorio docDir, extrae textos, genera embeddings en lotes y sincroniza las DBs.|Ninguno|
-|POST|/hybrid-search|Devuelve los mejores N documentos cruzando ambas bases de datos mediante RRF.|{"question": "string", "limit"?: number}|
-|POST|/vectorial-search|Realiza una búsqueda por similitud de cosenos usando embeddings en tu DB vectorial.|{"question": "string", "limit"?: number}|
-|POST|/semantic-search|Realiza una búsqueda léxica/semántica basada en palabras clave de texto crudo.|{"question": "string", "limit"?: number}|
-|GET|/health|Endpoint interno para monitoreo de estado del motor RAG.|Ninguno|
+| POST | /query | Complete RAG Pipeline: Searches for hybrid context, injects into the prompt, and generates a response with the LLM. | {"question": "string", "promptTemplate"?: "string"} |
+|GET|/reload-docs|Scan the docDir directory, extract text, generate batch embeddings, and synchronize databases.|None|
+|POST|/hybrid-search|Returns the best N documents by cross-referencing both databases using RRF.|{"question": "string", "limit"?: number}|
+|POST|/vectorial-search|Perform a cosine similarity search using embeddings in your vector database.|{"question": "string", "limit"?: number}|
+|POST|/semantic-search|Perform a lexical/semantic search based on raw text keywords.|{"question": "string", "limit"?: number}|
+|GET|/health|Internal endpoint for monitoring the RAG engine status.|None|
 
-## 📐 Estructura del Proyecto
-El código fuente está organizado bajo una limpia separación de responsabilidades:
- * `src/core/`: Orquestador principal, manejo de ciclos de solicitud-respuesta HTTP y mapeo dinámico del router.
- * `src/adapters/`: Contratos de interfaces y las implementaciones para bases de datos y modelos de IA.
- * `src/ingestion/`: Motores de lectura, parsing y normalización de documentos JSON.
- * `src/utils/`: Algoritmos puros como el RRF (Reciprocal Rank Fusion) y utilidades de renderizado de prompts.
+## 📐 Project Structure
+The source code is organized under a clear separation of responsibilities:
+* `src/core/`: Main orchestrator, handling HTTP request-response cycles and dynamic router mapping.
+* `src/adapters/`: Interface contracts and implementations for databases and AI models.
+* `src/ingestion/`: Engines for reading, parsing, and normalizing JSON documents.
+* `src/utils/`: Pure algorithms such as RRF (Reciprocal Rank Fusion) and prompt rendering utilities.
 
-## 📄 Licencia
+## 📄 License
 MIT
 
-## Repositorio
+## Repository
 [https://github.com/zenx5/rag-router](https://github.com/zenx5/rag-router)
